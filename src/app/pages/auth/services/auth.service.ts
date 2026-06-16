@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
 import { Router } from "@angular/router";
 import { Injectable, signal } from "@angular/core";
-import { LoginRequest, UserAuthenticated } from "../models";
+import { LoginRequest, UserAuthenticated, CreateUser } from "../models";
 import { lastValueFrom } from "rxjs";
 import { ApiResponseData } from "../../../shared/models";
 
@@ -33,6 +33,13 @@ export class AuthService {
         const user = this.decodeToken(response.data);
         localStorage.setItem(this.tokenKey, response.data);
         this.currentUser.set(user);
+        return response;
+    }
+
+    async register(request: CreateUser): Promise<ApiResponseData<string>> {
+        const response = await lastValueFrom(
+            this.http.post<ApiResponseData<string>>(`${this.apiUrl}/users`, request)
+        );
         return response;
     }
 

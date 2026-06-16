@@ -1,1 +1,101 @@
-<p>register works!</p>
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center bg-light">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+
+      <mat-card class="shadow-sm border-0">
+        <mat-card-header class="text-center pt-4 pb-2 d-flex flex-column align-items-center">
+          <mat-icon class="text-primary" style="font-size: 48px; width: 48px; height: 48px;">
+            person_add
+          </mat-icon>
+          <h4 class="mt-3 mb-1 fw-bold">Crear Cuenta</h4>
+          <p class="text-muted small mb-0">Regístrate en el sistema de donaciones</p>
+        </mat-card-header>
+
+        <mat-card-content class="px-4 py-3">
+          <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+            <mat-form-field appearance="outline" class="w-100 mb-2">
+              <mat-label>Nombre completo</mat-label>
+              <input matInput type="text" formControlName="nombre" placeholder="Tu nombre" autocomplete="name" />
+              <mat-icon matIconPrefix>badge</mat-icon>
+              @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+              @if (form.get('nombre')?.hasError('minlength') && form.get('nombre')?.touched) {
+                <mat-error>Mínimo 3 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100 mb-2">
+              <mat-label>Correo electrónico</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="ejemplo@correo.com" autocomplete="email" />
+              <mat-icon matIconPrefix>email</mat-icon>
+              @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+                <mat-error>El correo es obligatorio</mat-error>
+              }
+              @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+                <mat-error>Ingrese un correo válido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100 mb-2">
+              <mat-label>Contraseña</mat-label>
+              <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
+                placeholder="••••••••" autocomplete="new-password" />
+              <mat-icon matIconPrefix>lock</mat-icon>
+              <button matIconSuffix type="button" mat-icon-button (click)="hidePassword.set(!hidePassword())"
+                [attr.aria-label]="'Toggle password visibility'">
+                <mat-icon>{{ hidePassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+                <mat-error>La contraseña es obligatoria</mat-error>
+              }
+              @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
+                <mat-error>Mínimo 6 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100 mb-2">
+              <mat-label>Confirmar contraseña</mat-label>
+              <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword"
+                placeholder="••••••••" autocomplete="new-password" />
+              <mat-icon matIconPrefix>verified_user</mat-icon>
+              <button matIconSuffix type="button" mat-icon-button (click)="hideConfirmPassword.set(!hideConfirmPassword())"
+                [attr.aria-label]="'Toggle password visibility'">
+                <mat-icon>{{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
+              @if (form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched) {
+                <mat-error>Confirma tu contraseña</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="d-grid gap-2 mt-4">
+              <button mat-flat-button color="primary" type="submit" class="py-2 fw-semibold" [disabled]="isLoading()">
+                @if (isLoading()) {
+                  <mat-spinner diameter="20" class="d-inline-block me-2"></mat-spinner>
+                  Registrando...
+                } @else {
+                  <ng-container>
+                    <mat-icon class="me-1">how_to_reg</mat-icon>
+                    Registrarse
+                  </ng-container>
+                }
+              </button>
+            </div>
+
+          </form>
+        </mat-card-content>
+
+        <mat-card-actions class="d-flex justify-content-center pb-4">
+          <small class="text-muted">
+            ¿Ya tienes cuenta?
+            <a routerLink="/auth/login" class="text-primary text-decoration-none fw-semibold">
+              Inicia sesión aquí
+            </a>
+          </small>
+        </mat-card-actions>
+      </mat-card>
+
+    </div>
+  </div>
+</div>
