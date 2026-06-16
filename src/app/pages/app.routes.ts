@@ -2,10 +2,10 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
-    // {
-    //     path: 'auth',
-    //     loadChildren: () => import('./views/auth/auth.routes').then(m => m.AUTH_ROUTES)
-    // },
+    {
+        path: 'auth',
+        loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES)
+    },
     // {
     //     path: '',
     //     canActivate: [authGuard],
@@ -26,6 +26,6 @@ export const routes: Routes = [
     //     ]
 
     // },
-    // { path: '**', redirectTo: 'auth/login' }
+    { path: '**', redirectTo: 'auth/login' }
 ];
 
