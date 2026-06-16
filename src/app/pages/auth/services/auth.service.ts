@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from "../../../../environments/environment";
 import { Router } from "@angular/router";
 import { Injectable, signal } from "@angular/core";
-import { AuthUser, LoginRequest } from "../models";
+import { LoginRequest, UserAuthenticated } from "../models";
 import { lastValueFrom } from "rxjs";
 import { ApiResponseData } from "../../../shared/models";
 
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly tokenKey = environment.tokenName;
     private readonly apiUrl = `${environment.api}`;
 
-    readonly currentUser = signal<AuthUser | null>(this.loadUserFromStorage());
+    readonly currentUser = signal<UserAuthenticated | null>(this.loadUserFromStorage());
 
     constructor(private http: HttpClient, private router: Router) { }
 
@@ -26,20 +26,29 @@ export class AuthService {
         return localStorage.getItem(this.tokenKey);
     }
 
-    async login(request: LoginRequest): Promise<void> {
+    async login(request: LoginRequest): Promise<ApiResponseData<string>> {
         const response = await lastValueFrom(
-            this.http.post<ApiResponseData<string>>(`${this.apiUrl}/auth`, request)
+            this.http.post<ApiResponseData<string>>(`${this.apiUrl}/users/login`, request)
         );
-
         const user = this.decodeToken(response.data);
         localStorage.setItem(this.tokenKey, response.data);
         this.currentUser.set(user);
+        return response;
     }
 
-    private decodeToken(token: string): AuthUser {
+    private decodeToken(token: string): UserAuthenticated {
         const payload = token.split('.')[1];
-        const decoded = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
-        return { ...decoded, token };
+        const decoded: Record<string, any> = JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
+
+        return {
+            nameidentifier: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'],
+            emailaddress: decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'],
+            role: decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'],
+            exp: decoded['exp'],
+            iss: decoded['iss'],
+            aud: decoded['aud'],
+            token,
+        };
     }
 
     logOut(): void {
@@ -48,7 +57,7 @@ export class AuthService {
         this.router.navigate([environment.pathLogin]);
     }
 
-    private loadUserFromStorage(): AuthUser | null {
+    private loadUserFromStorage(): UserAuthenticated | null {
         try {
             const token = localStorage.getItem(this.tokenKey);
             return token ? this.decodeToken(token) : null;

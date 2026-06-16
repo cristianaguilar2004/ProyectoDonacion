@@ -6,7 +6,7 @@ export namespace Alerts {
     Swal.fire({
       position: 'center',
       icon: 'success',
-      title: message,
+      text: message,
       showConfirmButton: false,
       timer: 2000
     });
@@ -16,7 +16,7 @@ export namespace Alerts {
     Swal.fire({
       position: 'center',
       icon: 'warning',
-      title: message,
+      text: message,
       showConfirmButton: false,
       timer: 2000
     });
@@ -26,7 +26,7 @@ export namespace Alerts {
     Swal.fire({
       position: 'center',
       icon: 'error',
-      title: message,
+      text: message,
       showConfirmButton: false,
       timer: 2000
     });
@@ -34,7 +34,7 @@ export namespace Alerts {
 
   export const Loading = (message: string = 'Cargando...') => {
     Swal.fire({
-      title: message,
+      text: message,
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -44,7 +44,7 @@ export namespace Alerts {
 
   export const Question = (question: string) => {
     return Swal.fire({
-      title: question,
+      text: question,
       showDenyButton: true,
       showCancelButton: false,
       confirmButtonText: 'Confirmar',

@@ -1,4 +1,4 @@
-const appPrefix: string = "donate-token";
+const appPrefix: string = "donate";
 
 export const environment = {
     pathLogin: '/auth/login',
