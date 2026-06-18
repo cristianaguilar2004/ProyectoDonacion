@@ -20,6 +20,10 @@ export const routes: Routes = [
         loadChildren: () => import('./pages/configuraciones/configuracion.routes').then(m => m.CONFIGURACIONES_ROUTES)
       },
       {
+        path: 'donaciones',
+        loadChildren: () => import('./pages/donaciones/donacion.routing').then(m => m.DONACIONES_ROUTES)
+      },
+      {
         path: '',
         redirectTo: '/home',
         pathMatch: 'full'
