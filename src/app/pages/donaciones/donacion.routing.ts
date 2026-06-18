@@ -2,7 +2,11 @@ import { Routes } from '@angular/router';
 
 export const DONACIONES_ROUTES: Routes = [
     {
-        path: 'donaciones',
+        path: 'disponibles',
         loadComponent: () => import('./donaciones/donaciones').then(m => m.Donaciones)
+    },
+    {
+        path: 'crear',
+        loadComponent: () => import('./crear-donacion/crear-donacion').then(m => m.CrearDonacion)
     }
 ];

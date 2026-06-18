@@ -1,1 +1,145 @@
-<p>crear-donacion works!</p>
+<div class="container-fluid p-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+
+      <mat-card class="shadow-sm border-0" style="border-radius: 16px;">
+        <mat-card-header class="pb-3 pt-3">
+          <mat-card-title class="fs-5 fw-bold">Nueva Donación</mat-card-title>
+          <mat-card-subtitle>Completa los datos del artículo a donar</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          @if (isLoading()) {
+            <div class="text-center py-4">
+              <mat-spinner diameter="32" class="d-inline-block"></mat-spinner>
+              <p class="text-muted mt-2 mb-0">Cargando catálogos...</p>
+            </div>
+          } @else {
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+              <!-- Image selector -->
+              <div class="mb-4">
+                <label class="form-label fw-medium small text-muted mb-2">Imagen del artículo</label>
+
+                @if (previewUrl) {
+                  <div class="position-relative d-inline-block">
+                    <img [src]="previewUrl" class="preview-img rounded border" alt="Preview" />
+                    <button type="button" mat-mini-fab color="warn" class="btn-remove-img"
+                      (click)="onRemoveImage()">
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" mat-stroked-button (click)="fileInput.click()" class="mt-1">
+                    <mat-icon>add_photo_alternate</mat-icon>
+                    {{ previewUrl ? 'Cambiar imagen' : 'Seleccionar imagen' }}
+                  </button>
+                  <input #fileInput type="file" accept="image/*" capture="environment"
+                    (change)="onFileSelected($event)" class="d-none" />
+                  <small class="text-muted mt-1">Máx 5 MB — Solo imágenes</small>
+                </div>
+              </div>
+
+              <div class="row g-3">
+                <!-- Nombre -->
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Nombre del artículo</mat-label>
+                    <input matInput formControlName="nombreArticulo" placeholder="Ej: Ropa en buen estado" />
+                    <mat-icon matIconPrefix>inventory_2</mat-icon>
+                    @if (form.get('nombreArticulo')?.hasError('required') && form.get('nombreArticulo')?.touched) {
+                      <mat-error>El nombre es obligatorio</mat-error>
+                    }
+                    @if (form.get('nombreArticulo')?.hasError('minlength') && form.get('nombreArticulo')?.touched) {
+                      <mat-error>Mínimo 3 caracteres</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <!-- Descripción -->
+                <div class="col-12">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Descripción</mat-label>
+                    <textarea matInput formControlName="descripcionArticulo" rows="3"
+                      placeholder="Describe el artículo..."></textarea>
+                    @if (form.get('descripcionArticulo')?.hasError('required') && form.get('descripcionArticulo')?.touched) {
+                      <mat-error>La descripción es obligatoria</mat-error>
+                    }
+                    @if (form.get('descripcionArticulo')?.hasError('minlength') && form.get('descripcionArticulo')?.touched) {
+                      <mat-error>Mínimo 10 caracteres</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <!-- Categoría -->
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Categoría</mat-label>
+                    <mat-select formControlName="categoriaId">
+                      @for (item of categorias; track item.id) {
+                        <mat-option [value]="item.id">{{ item.nombre }}</mat-option>
+                      }
+                    </mat-select>
+                    @if (form.get('categoriaId')?.hasError('required') && form.get('categoriaId')?.touched) {
+                      <mat-error>Selecciona una categoría</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <!-- Estado del artículo -->
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Estado del artículo</mat-label>
+                    <mat-select formControlName="estadoArticuloId">
+                      @for (item of estadosArticulo; track item.id) {
+                        <mat-option [value]="item.id">{{ item.descripcion }}</mat-option>
+                      }
+                    </mat-select>
+                    @if (form.get('estadoArticuloId')?.hasError('required') && form.get('estadoArticuloId')?.touched) {
+                      <mat-error>Selecciona un estado</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+
+                <!-- Sucursal -->
+                <div class="col-12 col-md-4">
+                  <mat-form-field appearance="outline" class="w-100">
+                    <mat-label>Sucursal</mat-label>
+                    <mat-select formControlName="sucursalId">
+                      @for (item of sucursales; track item.id) {
+                        <mat-option [value]="item.id">{{ item.nombre }}</mat-option>
+                      }
+                    </mat-select>
+                    @if (form.get('sucursalId')?.hasError('required') && form.get('sucursalId')?.touched) {
+                      <mat-error>Selecciona una sucursal</mat-error>
+                    }
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <div class="d-flex gap-2 justify-content-end mt-4">
+                <button type="button" mat-button routerLink="/donaciones/disponibles">Cancelar</button>
+                <button type="submit" mat-flat-button color="primary" [disabled]="isSubmitting()">
+                  @if (isSubmitting()) {
+                    <mat-spinner diameter="20" class="d-inline-block me-2"></mat-spinner>
+                    Creando...
+                  } @else {
+                    <ng-container>
+                      <mat-icon>send</mat-icon>
+                      Publicar Donación
+                    </ng-container>
+                  }
+                </button>
+              </div>
+
+            </form>
+          }
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+</div>
