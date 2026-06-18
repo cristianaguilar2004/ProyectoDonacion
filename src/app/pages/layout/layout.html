@@ -1,0 +1,27 @@
+<mat-sidenav-container class="layout-container">
+
+  <!-- Sidebar (mobile only) -->
+  <mat-sidenav
+    #sidenav
+    position="start"
+    mode="over"
+    [opened]="false"
+    class="sidenav-mobile"
+  >
+    <app-sidebar (close)="sidenav.close()" />
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Navbar -->
+    <app-navbar (toggleSidebar)="sidenav.toggle()" />
+
+    <!-- Main content -->
+    <main class="main-content">
+      <router-outlet />
+    </main>
+
+    <!-- Footer -->
+    <app-footer />
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

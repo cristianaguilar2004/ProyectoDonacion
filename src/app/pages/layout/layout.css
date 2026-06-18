@@ -1,0 +1,20 @@
+.layout-container {
+  height: 100vh;
+  background: #f5f5f5;
+}
+
+.sidenav-mobile {
+  width: 300px;
+  border-right: none !important;
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 64px;
+  background: #f5f5f5;
+}

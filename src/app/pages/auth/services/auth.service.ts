@@ -26,6 +26,12 @@ export class AuthService {
         return localStorage.getItem(this.tokenKey);
     }
 
+    isTokenExpired(): boolean {
+        const user = this.currentUser();
+        if (!user?.exp) return true;
+        return Date.now() >= user.exp * 1000;
+    }
+
     async login(request: LoginRequest): Promise<ApiResponseData<string>> {
         const response = await lastValueFrom(
             this.http.post<ApiResponseData<string>>(`${this.apiUrl}/users/login`, request)

@@ -1,0 +1,48 @@
+<div class="sidebar-container d-flex flex-column">
+
+  <!-- Header with gradient -->
+  <div class="sidebar-header text-center">
+    <mat-icon class="sidebar-logo-icon">volunteer_activism</mat-icon>
+    <h6 class="mt-2 mb-0 fw-bold">Sistema de Donaciones</h6>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Menu -->
+  <nav class="flex-grow-1 py-2 overflow-auto">
+    @for (item of menuItems; track item.label) {
+      @if (item.children && item.children.length > 0) {
+        <span class="sidebar-section-label px-3 py-2 text-muted small fw-semibold text-uppercase">
+          {{ item.label }}
+        </span>
+        @for (child of item.children; track child.label) {
+          <a mat-list-item [routerLink]="child.route" (click)="close.emit()" class="sidebar-link">
+            <mat-icon matListItemIcon class="me-2">{{ child.icon }}</mat-icon>
+            <span>{{ child.label }}</span>
+          </a>
+        }
+      } @else {
+        <a mat-list-item [routerLink]="item.route" (click)="close.emit()" class="sidebar-link">
+          <mat-icon matListItemIcon class="me-2">{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    }
+  </nav>
+
+  <mat-divider></mat-divider>
+
+  <!-- User footer -->
+  <div class="p-3 sidebar-footer">
+    @if (authService.isLoggedIn) {
+      <div class="d-flex align-items-center gap-2 mb-2 sidebar-user-info">
+        <mat-icon class="text-muted" style="font-size: 20px;">account_circle</mat-icon>
+        <small class="text-muted text-truncate">{{ authService.currentUser()?.emailaddress }}</small>
+      </div>
+    }
+    <button mat-stroked-button color="warn" class="w-100 logout-btn" (click)="authService.logOut()">
+      <mat-icon>logout</mat-icon>
+      Cerrar sesión
+    </button>
+  </div>
+</div>

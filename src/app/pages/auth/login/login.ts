@@ -61,7 +61,7 @@ export class Login implements OnInit {
       .then((response) => {
         Alerts.Success(response.message || '¡Bienvenido de nuevo!');
         this.onInitForm();
-        this.router.navigate(['/']);
+        this.router.navigate(['/home']);
       })
       .catch((error) => {
         Alerts.Error(error?.error?.message || 'Error al iniciar sesión');

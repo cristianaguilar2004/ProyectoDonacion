@@ -1,0 +1,66 @@
+<mat-toolbar color="primary" class="app-toolbar">
+
+    <!-- Hamburger button for mobile -->
+    @if (screenService.isMobile()) {
+    <button mat-icon-button (click)="toggleSidebar.emit()" class="me-2">
+        <mat-icon>menu</mat-icon>
+    </button>
+    }
+
+    <!-- Logo / Title -->
+    <span class="fw-bold app-title me-4">
+        <mat-icon class="me-1" style="vertical-align: middle;">volunteer_activism</mat-icon>
+        Sistema de Donaciones
+    </span>
+
+    <!-- Desktop menu -->
+    @if (!screenService.isMobile()) {
+    <nav class="d-flex align-items-center gap-1">
+        @for (item of menuItems; track item.label) {
+        @if (item.children && item.children.length > 0) {
+        <button mat-button [matMenuTriggerFor]="menu" class="nav-link-btn">
+            <span class="btn-content">
+                <mat-icon>{{ item.icon }}</mat-icon>
+                <span>{{ item.label }}</span>
+                <mat-icon class="arrow-icon">arrow_drop_down</mat-icon>
+            </span>
+        </button>
+        <mat-menu #menu="matMenu">
+            @for (child of item.children; track child.label) {
+            <button mat-menu-item [routerLink]="child.route">
+                <mat-icon>{{ child.icon }}</mat-icon>
+                <span>{{ child.label }}</span>
+            </button>
+            }
+        </mat-menu>
+        } @else {
+        <button mat-button [routerLink]="item.route" class="nav-link-btn">
+            <mat-icon class="me-1">{{ item.icon }}</mat-icon>
+            {{ item.label }}
+        </button>
+        }
+        }
+    </nav>
+    }
+
+    <!-- Spacer -->
+    <span class="flex-spacer"></span>
+
+    <!-- User info -->
+    @if (authService.isLoggedIn) {
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="px-3 py-2 text-center user-menu-header">
+            <mat-icon class="text-primary user-menu-icon">account_circle</mat-icon>
+            <p class="mb-0 mt-1 small text-muted">{{ authService.currentUser()?.emailaddress }}</p>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="authService.logOut()">
+            <mat-icon color="warn">logout</mat-icon>
+            <span class="text-danger">Cerrar sesión</span>
+        </button>
+    </mat-menu>
+    }
+</mat-toolbar>
