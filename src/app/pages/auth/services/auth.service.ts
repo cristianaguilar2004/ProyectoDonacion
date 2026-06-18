@@ -66,8 +66,13 @@ export class AuthService {
 
     logOut(): void {
         localStorage.removeItem(this.tokenKey);
+        this.clearMenu();
         this.currentUser.set(null);
         this.router.navigate([environment.pathLogin]);
+    }
+
+    clearMenu(): void {
+        localStorage.removeItem('donate-menu');
     }
 
     private loadUserFromStorage(): UserAuthenticated | null {

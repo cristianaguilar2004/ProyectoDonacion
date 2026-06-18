@@ -16,8 +16,8 @@
     <!-- Desktop menu -->
     @if (!screenService.isMobile()) {
     <nav class="d-flex align-items-center gap-1">
-        @for (item of menuItems; track item.label) {
-        @if (item.children && item.children.length > 0) {
+        @for (item of menuItems; track item.id) {
+        @if (item.hijos && item.hijos.length > 0) {
         <button mat-button [matMenuTriggerFor]="menu" class="nav-link-btn">
             <span class="btn-content">
                 <mat-icon>{{ item.icon }}</mat-icon>
@@ -26,15 +26,15 @@
             </span>
         </button>
         <mat-menu #menu="matMenu">
-            @for (child of item.children; track child.label) {
-            <button mat-menu-item [routerLink]="child.route">
+            @for (child of item.hijos; track child.id) {
+            <button mat-menu-item [routerLink]="child.ruta">
                 <mat-icon>{{ child.icon }}</mat-icon>
                 <span>{{ child.label }}</span>
             </button>
             }
         </mat-menu>
         } @else {
-        <button mat-button [routerLink]="item.route" class="nav-link-btn">
+        <button mat-button [routerLink]="item.ruta" class="nav-link-btn">
             <mat-icon class="me-1">{{ item.icon }}</mat-icon>
             {{ item.label }}
         </button>

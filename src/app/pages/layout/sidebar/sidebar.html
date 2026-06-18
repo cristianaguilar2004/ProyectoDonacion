@@ -10,19 +10,19 @@
 
   <!-- Menu -->
   <nav class="flex-grow-1 py-2 overflow-auto">
-    @for (item of menuItems; track item.label) {
-      @if (item.children && item.children.length > 0) {
+    @for (item of menuItems(); track item.id) {
+      @if (item.hijos && item.hijos.length > 0) {
         <span class="sidebar-section-label px-3 py-2 text-muted small fw-semibold text-uppercase">
           {{ item.label }}
         </span>
-        @for (child of item.children; track child.label) {
-          <a mat-list-item [routerLink]="child.route" (click)="close.emit()" class="sidebar-link">
+        @for (child of item.hijos; track child.id) {
+          <a mat-list-item [routerLink]="child.ruta" (click)="close.emit()" class="sidebar-link">
             <mat-icon matListItemIcon class="me-2">{{ child.icon }}</mat-icon>
             <span>{{ child.label }}</span>
           </a>
         }
       } @else {
-        <a mat-list-item [routerLink]="item.route" (click)="close.emit()" class="sidebar-link">
+        <a mat-list-item [routerLink]="item.ruta" (click)="close.emit()" class="sidebar-link">
           <mat-icon matListItemIcon class="me-2">{{ item.icon }}</mat-icon>
           <span>{{ item.label }}</span>
         </a>

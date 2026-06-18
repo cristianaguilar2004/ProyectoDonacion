@@ -1,5 +1,5 @@
 export interface Rol {
-    id: number;
+    id: string;
     nombre: string;
     menu: string;
 }
