@@ -1,0 +1,76 @@
+<div class="container-fluid p-4">
+  <div class="row g-4">
+    <div class="col-12">
+
+      <app-card title="Categorías" subtitle="Administración de categorías">
+        <div class="d-flex justify-content-end mb-3">
+          <button mat-flat-button color="primary" (click)="onShowModal()">
+            <mat-icon>add</mat-icon>
+            Nueva Categoría
+          </button>
+        </div>
+
+        @if (isLoading()) {
+          <div class="text-center py-4">
+            <mat-spinner diameter="32" class="d-inline-block"></mat-spinner>
+            <p class="text-muted mt-2 mb-0">Cargando categorías...</p>
+          </div>
+        } @else {
+          <div class="table-responsive">
+            <table mat-table [dataSource]="dataSource" class="w-100">
+
+              <!-- ID Column -->
+              <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef class="fw-semibold">ID</th>
+                <td mat-cell *matCellDef="let item" class="text-muted small">{{ item.id.substring(0, 8) }}...</td>
+              </ng-container>
+
+              <!-- Nombre Column -->
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef class="fw-semibold">Nombre</th>
+                <td mat-cell *matCellDef="let item">{{ item.nombre }}</td>
+              </ng-container>
+
+              <!-- Activo Column -->
+              <ng-container matColumnDef="activo">
+                <th mat-header-cell *matHeaderCellDef class="fw-semibold">Estado</th>
+                <td mat-cell *matCellDef="let item">
+                  <span [class.text-success]="item.activo" [class.text-danger]="!item.activo" class="fw-medium">
+                    {{ item.activo ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Acciones Column -->
+              <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef class="fw-semibold">Acciones</th>
+                <td mat-cell *matCellDef="let item">
+                  <button mat-icon-button color="primary" matTooltip="Editar" (click)="onShowModal(item)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button [color]="item.activo ? 'warn' : 'primary'"
+                    [matTooltip]="item.activo ? 'Desactivar' : 'Activar'"
+                    (click)="onToggleActivo(item)">
+                    <mat-icon>{{ item.activo ? 'toggle_off' : 'toggle_on' }}</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+              @if (dataSource.length === 0) {
+                <tr>
+                  <td [attr.colspan]="displayedColumns.length" class="text-center py-4 text-muted">
+                    No hay categorías registradas
+                  </td>
+                </tr>
+              }
+            </table>
+          </div>
+        }
+      </app-card>
+
+    </div>
+  </div>
+</div>

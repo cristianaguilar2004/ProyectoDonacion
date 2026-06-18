@@ -16,6 +16,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/home/home').then(m => m.HomeComponent)
       },
       {
+        path: 'configuraciones',
+        loadChildren: () => import('./pages/configuraciones/configuracion.routes').then(m => m.CONFIGURACIONES_ROUTES)
+      },
+      {
         path: '',
         redirectTo: '/home',
         pathMatch: 'full'
