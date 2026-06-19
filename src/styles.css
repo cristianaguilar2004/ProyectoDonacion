@@ -27,32 +27,8 @@ mat-error {
   background: #e8eaf6 !important;
 }
 
-/* Snackbar custom styles */
-.snack-success {
-  --mdc-snackbar-container-color: #2e7d32 !important;
+/* SweetAlert2 above Material dialogs */
+.swal2-container {
+  z-index: 100000000 !important;
 }
 
-.snack-warning {
-  --mdc-snackbar-container-color: #e65100 !important;
-}
-
-.snack-error {
-  --mdc-snackbar-container-color: #c62828 !important;
-}
-
-.snack-info {
-  --mdc-snackbar-container-color: #1565c0 !important;
-}
-
-.snack-success, .snack-warning, .snack-error, .snack-info {
-  --mdc-snackbar-supporting-text-color: white !important;
-  border-radius: 8px !important;
-}
-
-.mat-mdc-snack-bar-container .mdc-snackbar__surface {
-  border-radius: 8px !important;
-}
-
-.cdk-overlay-container .swal2-container {
-  z-index: 9999 !important;
-}
