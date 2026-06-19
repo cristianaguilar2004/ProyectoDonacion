@@ -1,10 +1,13 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Donacion } from '../models';
+import { SolicitudService } from '../services/solicitud.service';
+import { Alerts } from '../../../shared/notifications/alerts';
 
 @Component({
     selector: 'app-donacion-detalle',
@@ -15,10 +18,10 @@ import { Donacion } from '../models';
         MatButtonModule,
         MatIconModule,
         MatChipsModule,
+        MatProgressSpinnerModule,
     ],
     template: `
         <mat-dialog-content class="p-0">
-            <!-- Image -->
             @if (data.urlImagen) {
             <div class="detalle-imagen">
                 <img [src]="data.urlImagen" [alt]="data.nombreArticulo" />
@@ -26,14 +29,11 @@ import { Donacion } from '../models';
             }
 
             <div class="p-4">
-                <!-- Title -->
                 <h3 class="fw-bold mb-1">{{ data.nombreArticulo }}</h3>
                 <p class="text-muted small mb-3">Publicado {{ data.fechaCreacion | date:'mediumDate' }}</p>
 
-                <!-- Description -->
                 <p class="mb-3">{{ data.descripcionArticulo }}</p>
 
-                <!-- Details Grid -->
                 <div class="row g-3 mb-3">
                     <div class="col-6">
                         <small class="text-muted d-block">Categoría</small>
@@ -55,10 +55,21 @@ import { Donacion } from '../models';
             </div>
         </mat-dialog-content>
 
-        <mat-dialog-actions align="end" class="px-4 pb-3">
-            <button mat-flat-button color="primary" (click)="onClose()">
+        <mat-dialog-actions align="end" class="px-4 pb-3 d-flex justify-content-between">
+            <button mat-button (click)="onClose()">
                 <mat-icon>close</mat-icon>
                 Cerrar
+            </button>
+            <button mat-flat-button color="primary" (click)="onSolicitar()" [disabled]="solicitando()">
+                @if (solicitando()) {
+                    <mat-spinner diameter="18" class="d-inline-block me-1"></mat-spinner>
+                    Solicitando...
+                } @else {
+                    <ng-container>
+                        <mat-icon>handshake</mat-icon>
+                        Solicitar Donación
+                    </ng-container>
+                }
             </button>
         </mat-dialog-actions>
     `,
@@ -78,12 +89,33 @@ import { Donacion } from '../models';
     `
 })
 export class DonacionDetalleComponent {
+    protected solicitando = signal(false);
+
     constructor(
         public dialogRef: MatDialogRef<DonacionDetalleComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Donacion
+        @Inject(MAT_DIALOG_DATA) public data: Donacion,
+        private solicitudService: SolicitudService
     ) { }
 
     onClose(): void {
         this.dialogRef.close();
+    }
+
+    onSolicitar(): void {
+        this.solicitando.set(true);
+        Alerts.Loading('Enviando solicitud...');
+
+        this.solicitudService.postSolicitudes(this.data.id)
+            .then(() => {
+                Alerts.Success('Solicitud enviada exitosamente');
+                this.dialogRef.close('solicitado');
+            })
+            .catch((error) => {
+                this.dialogRef.close('solicitado');
+                Alerts.Error(error?.error?.message || 'Error al enviar la solicitud');
+            })
+            .finally(() => {
+                this.solicitando.set(false);
+            });
     }
 }

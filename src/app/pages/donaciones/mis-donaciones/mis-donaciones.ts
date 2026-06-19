@@ -32,7 +32,8 @@ export class MisDonaciones implements OnInit {
 
   constructor(
     private donacionService: DonacionService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    
   ) { }
 
   ngOnInit(): void {
@@ -64,8 +65,10 @@ export class MisDonaciones implements OnInit {
       data: donacion,
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-      this.onCargarDatos();
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'aceptado') {
+        this.onCargarDatos();
+      }
     });
   }
 }

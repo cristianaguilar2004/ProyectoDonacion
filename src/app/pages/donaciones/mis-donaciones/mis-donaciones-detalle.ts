@@ -135,15 +135,18 @@ export class MisDonacionesDetalleComponent implements OnInit {
     constructor(
         public dialogRef: MatDialogRef<MisDonacionesDetalleComponent>,
         @Inject(MAT_DIALOG_DATA) public data: Donacion,
-        private solicitudService: SolicitudService
-    ) { }
+        private solicitudService: SolicitudService,
+    ) { 
+    }
 
     ngOnInit(): void {
         this.onCargarSolicitudes();
     }
 
-    onCargarSolicitudes(): void {
-        this.loadingSolicitudes.set(true);
+    onCargarSolicitudes(needsLoading: boolean = true): void {
+        if (needsLoading) {
+            this.loadingSolicitudes.set(true);
+        }
 
         this.solicitudService.getSolicitudesByDonacion(this.data.id)
             .then(response => {
@@ -161,12 +164,13 @@ export class MisDonacionesDetalleComponent implements OnInit {
         Alerts.Loading('Aceptando solicitud...');
 
         this.solicitudService.patchAceptarSolicitud(solicitudId)
-            .then(() => {
-                Alerts.Success('Solicitud aceptada');
-                this.onCargarSolicitudes();
+            .then((response) => {
+                Alerts.Close();
+                Alerts.Success(response.message || 'Solicitud aceptada exitosamente');
+                this.dialogRef.close('aceptado');
             })
-            .catch(() => {
-                Alerts.Error('Error al aceptar solicitud');
+            .catch((error) => {
+                Alerts.Error(error.error?.message || 'Error al aceptar solicitud');
             });
     }
 
