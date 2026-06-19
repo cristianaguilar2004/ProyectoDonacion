@@ -37,7 +37,6 @@ export class LayoutComponent implements OnInit {
         this.roleService.loadMenu().then(() => {
             this.menuItems = this.roleService.menuItems;
             this.cdr.detectChanges();
-            console.log('Menu items loaded in LayoutComponent:', this.menuItems);
         });
     }
 

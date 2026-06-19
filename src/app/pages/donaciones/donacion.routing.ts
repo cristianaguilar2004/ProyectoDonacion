@@ -8,5 +8,9 @@ export const DONACIONES_ROUTES: Routes = [
     {
         path: 'crear',
         loadComponent: () => import('./crear-donacion/crear-donacion').then(m => m.CrearDonacion)
+    },
+    {
+        path: 'mis-donaciones',
+        loadComponent: () => import('./mis-donaciones/mis-donaciones').then(m => m.MisDonaciones)
     }
 ];
