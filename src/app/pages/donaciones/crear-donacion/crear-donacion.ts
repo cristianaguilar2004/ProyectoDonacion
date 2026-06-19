@@ -15,6 +15,7 @@ import { EstadoArticuloService } from '../../configuraciones/services/estado-art
 import { CategoriaService } from '../../configuraciones/services/categoria.service';
 import { Sucursal, EstadoArticulo, Categoria } from '../../configuraciones/models';
 import { Alerts } from '../../../shared/notifications/alerts';
+import { CardComponent } from '../../../shared/components/card/card';
 
 @Component({
   selector: 'app-crear-donacion',
@@ -29,6 +30,7 @@ import { Alerts } from '../../../shared/notifications/alerts';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    CardComponent,
   ],
   templateUrl: './crear-donacion.html',
   styleUrl: './crear-donacion.css',
