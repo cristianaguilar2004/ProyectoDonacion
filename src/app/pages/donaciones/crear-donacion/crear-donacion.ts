@@ -44,6 +44,7 @@ export class CrearDonacion implements OnInit {
 
   protected selectedFile: File | null = null;
   protected previewUrl: string | null = null;
+  protected isImageLoading = signal(false);
   protected readonly maxFileSize = 5 * 1024 * 1024; // 5 MB
 
   constructor(
@@ -109,10 +110,16 @@ export class CrearDonacion implements OnInit {
     }
 
     this.selectedFile = file;
+    this.isImageLoading.set(true);
 
     const reader = new FileReader();
     reader.onload = () => {
       this.previewUrl = reader.result as string;
+      this.isImageLoading.set(false);
+    };
+    reader.onerror = () => {
+      this.isImageLoading.set(false);
+      Alerts.Error('Error al cargar la imagen');
     };
     reader.readAsDataURL(file);
   }

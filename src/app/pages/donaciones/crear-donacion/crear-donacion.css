@@ -20,3 +20,11 @@
   height: 16px;
   line-height: 16px;
 }
+
+.preview-placeholder {
+  width: 200px;
+  height: 150px;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+  background: #f8f9fa;
+}

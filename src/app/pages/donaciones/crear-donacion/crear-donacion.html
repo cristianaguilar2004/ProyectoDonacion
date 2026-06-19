@@ -22,22 +22,37 @@
                 <label class="form-label fw-medium small text-muted mb-2">Imagen del artículo</label>
 
                 @if (previewUrl) {
-                  <div class="position-relative d-inline-block">
+                  <div class="position-relative d-inline-block mb-2">
                     <img [src]="previewUrl" class="preview-img rounded border" alt="Preview" />
                     <button type="button" mat-mini-fab color="warn" class="btn-remove-img"
                       (click)="onRemoveImage()">
                       <mat-icon>close</mat-icon>
                     </button>
                   </div>
+                } @else if (isImageLoading()) {
+                  <div class="d-flex align-items-center justify-content-center preview-placeholder mb-2">
+                    <mat-spinner diameter="32"></mat-spinner>
+                  </div>
                 }
 
-                <div class="d-flex align-items-center gap-2">
-                  <button type="button" mat-stroked-button (click)="fileInput.click()" class="mt-1">
-                    <mat-icon>add_photo_alternate</mat-icon>
-                    {{ previewUrl ? 'Cambiar imagen' : 'Seleccionar imagen' }}
-                  </button>
-                  <input #fileInput type="file" accept="image/*" capture="environment"
-                    (change)="onFileSelected($event)" class="d-none" />
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                  @if (!previewUrl) {
+                    <button type="button" mat-stroked-button (click)="fileInput.click()" class="mt-1">
+                      <mat-icon>photo_library</mat-icon>
+                      Galería
+                    </button>
+                    <button type="button" mat-stroked-button (click)="cameraInput.click()" class="mt-1">
+                      <mat-icon>camera_alt</mat-icon>
+                      Tomar foto
+                    </button>
+                  } @else {
+                    <button type="button" mat-stroked-button (click)="fileInput.click()" class="mt-1">
+                      <mat-icon>photo_library</mat-icon>
+                      Cambiar imagen
+                    </button>
+                  }
+                  <input #fileInput type="file" accept="image/*" (change)="onFileSelected($event)" class="d-none" />
+                  <input #cameraInput type="file" accept="image/*" capture="environment" (change)="onFileSelected($event)" class="d-none" />
                   <small class="text-muted mt-1">Máx 5 MB — Solo imágenes</small>
                 </div>
               </div>
