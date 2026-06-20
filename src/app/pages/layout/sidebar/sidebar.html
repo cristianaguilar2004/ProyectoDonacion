@@ -1,46 +1,53 @@
 <div class="sidebar-container d-flex flex-column">
 
-  <!-- Header with gradient -->
-  <div class="sidebar-header text-center">
-    <mat-icon class="sidebar-logo-icon">volunteer_activism</mat-icon>
-    <h6 class="mt-2 mb-0 fw-bold">Sistema de Donaciones</h6>
+  <!-- Header -->
+  <div class="sidebar-header d-flex align-items-center gap-3">
+    <div class="sidebar-logo-wrap">
+      <mat-icon>volunteer_activism</mat-icon>
+    </div>
+    <div style="min-width: 0;">
+      <p class="sidebar-title">Donaciones</p>
+      <p class="sidebar-subtitle">Panel de administración</p>
+    </div>
   </div>
 
-  <mat-divider></mat-divider>
-
   <!-- Menu -->
-  <nav class="flex-grow-1 py-2 overflow-auto">
+  <nav class="sidebar-nav flex-grow-1 overflow-auto">
     @for (item of menuItems(); track item.id) {
       @if (item.hijos && item.hijos.length > 0) {
-        <span class="sidebar-section-label px-3 py-2 text-muted small fw-semibold text-uppercase">
-          {{ item.label }}
-        </span>
+        <span class="sidebar-section-label">{{ item.label }}</span>
         @for (child of item.hijos; track child.id) {
-          <a mat-list-item [routerLink]="child.ruta" (click)="close.emit()" class="sidebar-link">
-            <mat-icon matListItemIcon class="me-2">{{ child.icon }}</mat-icon>
+          <a class="sidebar-link"
+             [routerLink]="child.ruta"
+             routerLinkActive="active-link"
+             (click)="close.emit()">
+            <mat-icon>{{ child.icon }}</mat-icon>
             <span>{{ child.label }}</span>
           </a>
         }
       } @else {
-        <a mat-list-item [routerLink]="item.ruta" (click)="close.emit()" class="sidebar-link">
-          <mat-icon matListItemIcon class="me-2">{{ item.icon }}</mat-icon>
+        <a class="sidebar-link"
+           [routerLink]="item.ruta"
+           routerLinkActive="active-link"
+           (click)="close.emit()">
+          <mat-icon>{{ item.icon }}</mat-icon>
           <span>{{ item.label }}</span>
         </a>
       }
     }
   </nav>
 
-  <mat-divider></mat-divider>
-
-  <!-- User footer -->
-  <div class="p-3 sidebar-footer">
+  <!-- Footer -->
+  <div class="sidebar-footer">
     @if (authService.isLoggedIn) {
-      <div class="d-flex align-items-center gap-2 mb-2 sidebar-user-info">
-        <mat-icon class="text-muted" style="font-size: 20px;">account_circle</mat-icon>
-        <small class="text-muted text-truncate">{{ authService.currentUser()?.emailaddress }}</small>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <div class="user-avatar">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <span class="user-email">{{ authService.currentUser()?.emailaddress }}</span>
       </div>
     }
-    <button mat-stroked-button color="warn" class="w-100 logout-btn" (click)="authService.logOut()">
+    <button mat-stroked-button class="logout-btn" (click)="authService.logOut()">
       <mat-icon>logout</mat-icon>
       Cerrar sesión
     </button>
