@@ -20,7 +20,15 @@ export class SolicitudService {
         return this.appService.get<ApiResponseData<Solicitud[]>>(`${this.apiUrl}/donacion/${donacionId}`);  
     }
 
+    getSolicitudesAceptadas() : Promise<ApiResponseData<Solicitud[]>> {
+        return this.appService.get<ApiResponseData<Solicitud[]>>(`${this.apiUrl}/aceptadas`);  
+    }
+
     patchAceptarSolicitud(solicitudId: string) : Promise<ApiResponseData<Solicitud>> {
         return this.appService.patch<ApiResponseData<Solicitud>>(`${this.apiUrl}/${solicitudId}/aceptar`, JSON.stringify({}));
+    }
+
+    patchEntregarSolicitud(solicitudId: string) : Promise<ApiResponseData<Solicitud>> {
+        return this.appService.patch<ApiResponseData<Solicitud>>(`${this.apiUrl}/${solicitudId}/entregar`, JSON.stringify({}));
     }
 }

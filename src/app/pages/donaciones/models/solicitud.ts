@@ -1,4 +1,5 @@
 import { AuthUser } from "../../auth/models";
+import { Donacion } from "./donacion";
 
 export interface Solicitud {
     donacionId:      string;
@@ -13,4 +14,5 @@ export interface Solicitud {
     usuarioModifica: null | string;
     fechaModifica:   null | Date;
     activo:          boolean;
+    donacion:        null | Donacion;
 }
