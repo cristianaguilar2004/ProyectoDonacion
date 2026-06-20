@@ -57,10 +57,16 @@ export class Donaciones implements OnInit {
   }
 
   onVerDetalle(donacion: Donacion): void {
-    this.dialog.open(DonacionDetalleComponent, {
+    const dialogRef = this.dialog.open(DonacionDetalleComponent, {
       width: '550px',
       maxWidth: '95vw',
       data: donacion,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'desactivado') {
+        this.onCargarDatos();
+      }
     });
   }
 }

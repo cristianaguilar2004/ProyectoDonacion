@@ -26,4 +26,8 @@ export class DonacionService {
     postDonacion(donacion: FormData): Promise<ApiResponseData<Donacion>> {
         return this.appService.post<ApiResponseData<Donacion>>(this.apiUrl, donacion);
     }
+
+    patchDesactivarDonacion(id: string): Promise<ApiResponseData<Donacion>> {
+        return this.appService.patch<ApiResponseData<Donacion>>(`${this.apiUrl}/${id}/desactivar`, JSON.stringify({}));
+    }
 }
