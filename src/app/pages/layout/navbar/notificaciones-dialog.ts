@@ -1,4 +1,4 @@
-import { Component, Inject, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,87 +20,117 @@ import { Notificacion } from '../models';
         MatDividerModule,
     ],
     template: `
-        <div class="p-3" style="min-width: 350px; max-width: 450px;">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <h5 class="fw-bold mb-0">Notificaciones</h5>
-                @if (totalNoLeidas() > 0) {
-                <button mat-stroked-button color="primary" size="small" (click)="onMarcarTodas()">
-                    Marcar todas leídas
-                </button>
-                }
-            </div>
-
-            <mat-divider></mat-divider>
-
-            @if (notificaciones().length === 0) {
-            <div class="text-center py-5">
-                <mat-icon class="text-muted" style="font-size: 48px; width: 48px; height: 48px;">notifications_none</mat-icon>
-                <p class="text-muted mt-2 mb-0">No hay notificaciones</p>
-            </div>
-            } @else {
-            <mat-list class="pt-2">
-                @for (notif of notificaciones(); track notif.id) {
-                <mat-list-item class="notif-item" [class.notif-no-leida]="!notif.leida"
-                    (click)="onMarcarLeida(notif)">
-                    <div class="d-flex align-items-start gap-2 py-1" style="cursor: pointer;">
-                        <div class="mt-1">
-                            @if (!notif.leida) {
-                            <mat-icon class="text-primary" style="font-size: 20px;">notifications_active</mat-icon>
-                            } @else {
-                            <mat-icon class="text-muted" style="font-size: 20px;">notifications</mat-icon>
-                            }
-                        </div>
-                        <div class="flex-grow-1 min-w-0">
-                            <p class="mb-0 small" [class.fw-semibold]="!notif.leida">{{ notif.mensaje }}</p>
-                            <small class="text-muted">{{ notif.fechaCreacion | date:'short' }}</small>
-                        </div>
-                        @if (!notif.leida) {
-                        <span class="notif-dot"></span>
-                        }
-                    </div>
-                </mat-list-item>
-                <mat-divider></mat-divider>
-                }
-            </mat-list>
+    <div class="p-3" style="min-width: 380px; max-width: 480px;">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="fw-bold mb-0">Notificaciones</h5>
+            @if (totalNoLeidas() > 0) {
+            <button mat-stroked-button color="primary" (click)="onMarcarTodas()">
+                Marcar todas leídas
+            </button>
             }
         </div>
-    `,
-    styles: `
-        .notif-item { cursor: pointer; transition: background 0.2s; }
-        .notif-item:hover { background: #f5f5f5; border-radius: 8px; }
-        .notif-no-leida { background: #e8eaf6; border-radius: 8px; }
-        .notif-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: #3f51b5; display: inline-block; flex-shrink: 0;
+
+        <mat-divider></mat-divider>
+
+        @if (notificaciones().length === 0) {
+        <div class="text-center py-5">
+            <mat-icon class="text-muted" style="font-size: 48px; width: 48px; height: 48px;">notifications_none</mat-icon>
+            <p class="text-muted mt-2 mb-0">No hay notificaciones</p>
+        </div>
+        } @else {
+        <div class="notif-list">
+            @for (notif of notificaciones(); track notif.id) {
+            <div class="notif-item" [class.notif-no-leida]="!notif.leida" (click)="onMarcarLeida(notif)">
+                <div class="notif-icon">
+                    @if (!notif.leida) {
+                    <mat-icon class="text-primary">notifications_active</mat-icon>
+                    } @else {
+                    <mat-icon class="text-muted">notifications</mat-icon>
+                    }
+                </div>
+                <div class="notif-content">
+                    <p class="notif-mensaje" [class.fw-semibold]="!notif.leida">{{ notif.mensaje }}</p>
+                    <small class="text-muted">{{ notif.fechaCreacion | date:'short' }}</small>
+                </div>
+                @if (!notif.leida) {
+                <span class="notif-dot"></span>
+                }
+            </div>
+            <mat-divider></mat-divider>
+            }
+        </div>
         }
-    `
+    </div>
+`,
+    styles: `
+    .notif-list {
+        max-height: 480px;
+        overflow-y: auto;
+    }
+
+    .notif-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 12px 8px;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background 0.2s;
+    }
+
+    .notif-item:hover { background: #f5f5f5; }
+
+    .notif-no-leida { background: #e8eaf6; }
+    .notif-no-leida:hover { background: #dde0f5; }
+
+    .notif-icon {
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+
+    .notif-content {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .notif-mensaje {
+        margin: 0 0 4px 0;
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: normal;   /* ← permite que el texto haga wrap */
+        word-break: break-word;
+        overflow: visible;
+    }
+
+    .notif-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #3f51b5;
+        flex-shrink: 0;
+        margin-top: 4px;
+    }
+`
 })
 export class NotificacionesDialogComponent {
-    protected notificaciones = signal<Notificacion[]>([]);
-    protected totalNoLeidas = signal(0);
 
     constructor(
         public dialogRef: MatDialogRef<NotificacionesDialogComponent>,
-        private notificacionService: NotificacionService
-    ) {
-        this.notificaciones.set(this.notificacionService.notificaciones());
-        this.totalNoLeidas.set(this.notificacionService.totalNoLeidas());
-    }
+        readonly notificacionService: NotificacionService  // ← readonly, sin signals propios
+    ) { }
+
+    // Delegamos directo al servicio
+    get notificaciones() { return this.notificacionService.notificaciones; }
+    get totalNoLeidas() { return this.notificacionService.totalNoLeidas; }
 
     onMarcarLeida(notif: Notificacion): void {
         if (!notif.leida) {
             this.notificacionService.marcarLeida(notif.id);
-            this.notificaciones.update(prev =>
-                prev.map(n => n.id === notif.id ? { ...n, leida: true } : n)
-            );
-            this.totalNoLeidas.update(n => Math.max(0, n - 1));
         }
     }
 
     onMarcarTodas(): void {
         this.notificacionService.marcarTodasLeidas();
-        this.notificaciones.update(prev => prev.map(n => ({ ...n, leida: true })));
-        this.totalNoLeidas.set(0);
     }
 
     onClose(): void {

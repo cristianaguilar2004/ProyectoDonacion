@@ -48,9 +48,11 @@
 
     <!-- Notifications -->
     @if (authService.isLoggedIn) {
-    <button mat-icon-button [matBadge]="notificacionService.totalNoLeidas()" matBadgeColor="warn"
-      matBadgeSize="small" class="me-1 notif-btn" (click)="onAbrirNotificaciones()" matTooltip="Notificaciones">
-      <mat-icon>notifications</mat-icon>
+    <button mat-icon-button
+        [matBadge]="notificacionService.totalNoLeidas() > 0 ? notificacionService.totalNoLeidas() : null"
+        matBadgeColor="warn" matBadgeSize="small" class="me-1 notif-btn" (click)="onAbrirNotificaciones()"
+        matTooltip="Notificaciones">
+        <mat-icon>notifications</mat-icon>
     </button>
     }
 

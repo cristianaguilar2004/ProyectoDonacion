@@ -44,10 +44,18 @@ export class NavbarComponent {
     readonly screenService: ScreenService,
     private dialog: MatDialog,
     readonly notificacionService: NotificacionService
-  ) {
+) {
     const userId = this.authService.currentUser()?.nameidentifier;
     if (userId) this.notificacionService.conectar(userId);
-  }
+
+    // Abre el dialog automáticamente al recibir notificación
+    this.notificacionService.onNuevaNotificacion = () => {
+        const dialogAbierto = this.dialog.openDialogs.length > 0;
+        if (!dialogAbierto) {  // ← solo si no hay un dialog ya abierto
+            this.onAbrirNotificaciones();
+        }
+    };
+}
 
   protected onAbrirNotificaciones(): void {
     this.dialog.open(NotificacionesDialogComponent, {

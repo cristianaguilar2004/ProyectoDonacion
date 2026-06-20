@@ -32,6 +32,7 @@ export class NotificacionService {
             this.notificaciones.update(prev => [notif, ...prev]);
             this.totalNoLeidas.update(n => n + 1);
             this.notificacionRecibida.update(n => n + 1);
+            this.onNuevaNotificacion?.();
         });
 
         this.hub.start()
@@ -39,7 +40,7 @@ export class NotificacionService {
                 this.hub!.invoke('UnirseAGrupo', usuarioId);
                 this.cargarNotificaciones();
             })
-            .catch(err => console.error('SignalR error:', err));
+            .catch(err => console.error('❌ SignalR error:', err));
     }
 
     private cargarNotificaciones() {
@@ -76,4 +77,6 @@ export class NotificacionService {
         this.hub?.stop();
         this.hub = null;
     }
+
+    onNuevaNotificacion: (() => void) | null = null;
 }
