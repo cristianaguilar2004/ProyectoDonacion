@@ -11,6 +11,7 @@ export class NotificacionService {
 
     readonly notificaciones = signal<Notificacion[]>([]);
     readonly totalNoLeidas = signal<number>(0);
+    readonly notificacionRecibida = signal<number>(0);
 
     private hub: signalR.HubConnection | null = null;
 
@@ -30,6 +31,7 @@ export class NotificacionService {
         this.hub.on('NuevaNotificacion', (notif: Notificacion) => {
             this.notificaciones.update(prev => [notif, ...prev]);
             this.totalNoLeidas.update(n => n + 1);
+            this.notificacionRecibida.update(n => n + 1);
         });
 
         this.hub.start()
@@ -41,7 +43,7 @@ export class NotificacionService {
     }
 
     private cargarNotificaciones() {
-        this.appService.get<ApiResponseData<Notificacion[]>>('notificaciones/mis-notificaciones')
+        this.appService.get<ApiResponseData<Notificacion[]>>('notificaciones')
             .then(response => {
                 if (response.data) {
                     this.notificaciones.set(response.data);
@@ -52,8 +54,8 @@ export class NotificacionService {
     }
 
     marcarLeida(notificacionId: string) {
-        this.appService.put<ApiResponseData<Notificacion>>(
-            `notificaciones/${notificacionId}/marcar-leida`,
+        this.appService.patch<ApiResponseData<Notificacion>>(
+            `notificaciones/${notificacionId}/leida`,
             JSON.stringify({})
         )
             .then(() => {

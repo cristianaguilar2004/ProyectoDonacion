@@ -46,6 +46,14 @@
     <!-- Spacer -->
     <span class="flex-spacer"></span>
 
+    <!-- Notifications -->
+    @if (authService.isLoggedIn) {
+    <button mat-icon-button [matBadge]="notificacionService.totalNoLeidas()" matBadgeColor="warn"
+      matBadgeSize="small" class="me-1 notif-btn" (click)="onAbrirNotificaciones()" matTooltip="Notificaciones">
+      <mat-icon>notifications</mat-icon>
+    </button>
+    }
+
     <!-- User info -->
     @if (authService.isLoggedIn) {
     <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-btn">

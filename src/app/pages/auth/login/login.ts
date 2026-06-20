@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../services/auth.service';
+import { NotificacionService } from '../../layout/services/notificacion.service';
 import { Alerts } from '../../../shared/notifications/alerts';
 
 @Component({
@@ -34,7 +35,8 @@ export class Login implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificacionService: NotificacionService
   ) { }
 
   ngOnInit(): void {
@@ -61,6 +63,8 @@ export class Login implements OnInit {
       .then((response) => {
         Alerts.Success(response.message || '¡Bienvenido de nuevo!');
         this.onInitForm();
+        const userId = this.authService.currentUser()?.nameidentifier;
+        if (userId) this.notificacionService.conectar(userId);
         this.router.navigate(['/home']);
       })
       .catch((error) => {
